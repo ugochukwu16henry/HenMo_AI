@@ -1,15 +1,1 @@
-export default function Terms() {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 to-indigo-900 py-20 px-6 text-white">
-      <div className="max-w-4xl mx-auto bg-black/50 backdrop-blur-xl rounded-3xl p-16 border border-purple-500">
-        <h1 className="text-6xl font-black text-center mb-12">HenMo AI Terms of Use</h1>
-        <p className="text-xl leading-relaxed text-center">
-          By using ChatBoss or any HenMo AI product, you agree to these rules.<br/><br/>
-          Owned and operated by Henry Maobughichi Ugochukwu • HenMo AI • Nigeria<br/>
-          No illegal use • No reverse-engineering • No resale of access<br/><br/>
-          © 2025 HenMo AI — All rights reserved
-        </p>
-      </div>
-    </div>
-  )
-}
+export default function Terms() { return ( <div className='min-h-screen bg-gradient-to-br from-purple-900 to-indigo-900 py-20 px-6 text-white'><div className='max-w-4xl mx-auto bg-black/50 backdrop-blur-xl rounded-3xl p-16 border border-purple-500'><h1 className='text-6xl font-black text-center mb-12'>HenMo AI Terms of Use</h1><p className='text-xl leading-relaxed text-center'>By using ChatBoss or any HenMo AI product, you agree to these rules.<br/><br/>Owned by Henry Maobughichi Ugochukwu • HenMo AI • Nigeria<br/>No illegal use • No reverse-engineering • No resale<br/><br/>© 2025 HenMo AI — All rights reserved</p></div></div> ) }
