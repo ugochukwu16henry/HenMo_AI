@@ -1,0 +1,15 @@
+export default function Privacy() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 to-indigo-900 py-20 px-6 text-white">
+      <div className="max-w-4xl mx-auto bg-black/50 backdrop-blur-xl rounded-3xl p-16 border border-purple-500">
+        <h1 className="text-6xl font-black text-center mb-12">HenMo AI Privacy Policy</h1>
+        <p className="text-xl leading-relaxed text-center">
+          We respect your privacy and protect your data.<br/><br/>
+          Your chats and memory are private to you. We never sell your data.<br/>
+          You own your content. Delete anytime from HenMo Hub.<br/><br/>
+          © 2025 HenMo AI — Henry Maobughichi Ugochukwu
+        </p>
+      </div>
+    </div>
+  )
+}
