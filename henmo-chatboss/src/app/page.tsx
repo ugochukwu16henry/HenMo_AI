@@ -27,6 +27,9 @@ export default function Home() {
           <a href="/chatboss" className="inline-block px-12 py-6 bg-white text-indigo-900 text-xl font-bold rounded-2xl hover:scale-105 transition">
             Enter ChatBoss
           </a>
+          <a href="/hub" className="inline-block px-12 py-6 bg-purple-600 text-white text-xl font-bold rounded-2xl hover:scale-105 transition ml-4">
+            HenMo Hub
+          </a>
         </div>
       </div>
     );
@@ -46,6 +49,8 @@ export default function Home() {
           appearance={{ theme: ThemeSupa }}
           theme="dark"
           providers={["google", "github"]}
+          onlyThirdPartyProviders={false}
+          view="sign_in"
         />
 
         <p className="text-center text-white/70 text-sm mt-8">
