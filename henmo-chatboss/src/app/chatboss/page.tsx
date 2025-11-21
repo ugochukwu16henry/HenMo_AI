@@ -98,4 +98,4 @@ export default function ChatBoss() {
       </div>
     </div>
   )
-}
+}<a href='/hub' className='text-purple-400 hover:underline'>Go to HenMo Hub →</a>
