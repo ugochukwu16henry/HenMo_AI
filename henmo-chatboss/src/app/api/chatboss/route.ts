@@ -27,14 +27,12 @@ export async function POST(req: NextRequest) {
     if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     if (!message?.trim()) return NextResponse.json({ reply: 'Ask me anything, Boss.' })
 
-    // Generate embedding
     const embeddingResponse = await openai.embeddings.create({
       model: 'text-embedding-3-small',
       input: message,
     })
     const queryEmbedding = embeddingResponse.data[0].embedding
 
-    // RAG search
     const { data: memories } = await supabase.rpc('match_memory', {
       query_embedding: queryEmbedding,
       match_threshold: 0.78,
@@ -42,10 +40,10 @@ export async function POST(req: NextRequest) {
     })
 
     const context = memories
-      ? memories.map((m: any) => `Memory: ${m.title ? m.title + ' - ' : ''}${m.content}`).join('\n\n')
-      : 'No previous memory found.'
+      ? memories.map((m: any) => `Memory: ${m.title || ''} - ${m.content}`).join('\n\n')
+      : 'No previous memory.'
 
-    const messages = [
+    const messages: any[] = [
       { role: 'system', content: SYSTEM_PROMPT },
       { role: 'system', content: `User memory context:\n\n${context}` },
       { role: 'user', content: message },
@@ -60,7 +58,6 @@ export async function POST(req: NextRequest) {
 
     const reply = completion.choices[0].message.content?.trim() || "I'm thinking, Boss..."
 
-    // Auto-save good responses
     if (reply.length > 100) {
       const replyEmbedding = await openai.embeddings.create({
         model: 'text-embedding-3-small',
