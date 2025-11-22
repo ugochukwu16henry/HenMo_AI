@@ -13,13 +13,27 @@ interface Memory {
 export default function HenMoHub() {
   const [memories, setMemories] = useState<Memory[]>([]);
   const [search, setSearch] = useState("");
+  const [premium, setPremium] = useState(false);
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
       if (!data.user) window.location.href = "/";
+      setUser(data.user);
       loadMemories();
+      checkPremium(data.user.id);
     });
   }, []);
+
+  const checkPremium = async (userId: string) => {
+    const { data } = await supabase
+      .from("subscriptions")
+      .select("status")
+      .eq("user_id", userId)
+      .eq("status", "active");
+
+    setPremium(!!data?.length);
+  };
 
   const loadMemories = async () => {
     const { data } = await supabase
@@ -42,11 +56,16 @@ export default function HenMoHub() {
   return (
     <div className="min-h-screen bg-black text-white p-8">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-12">
-          <h1 className="text-7xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-            HenMo Hub
-          </h1>
-          <p className="text-3xl opacity-80 mt-4">Your Personal Brain • {memories.length} memories</p>
+        <div className="flex justify-between items-center mb-12">
+          <div>
+            <h1 className="text-7xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              HenMo Hub
+            </h1>
+            <p className="text-3xl opacity-80 mt-4">Your Personal Brain • {memories.length} memories</p>
+          </div>
+          <p className="text-2xl font-bold {premium ? 'text-green-400' : 'text-red-400'}">
+            {premium ? "Premium Unlocked" : "Free Plan (10 memories max)"}
+          </p>
         </div>
 
         <input
@@ -54,7 +73,7 @@ export default function HenMoHub() {
           placeholder="Search your memories..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full mb-10 px-8 py-5 bg-gray-900 border-2 border-purple-600 rounded-2xl text-xl focus:outline-none focus:border-purple-400"
+          className="w-full mb-10 px-8 py-5 bg-gray-900 border border-purple-600 rounded-2xl text-xl focus:outline-none focus:border-purple-400"
         />
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -84,8 +103,14 @@ export default function HenMoHub() {
             ))
           )}
         </div>
+
+        {!premium && memories.length >= 10 && (
+          <p className="text-center text-2xl text-red-400 mt-12">
+            Upgrade to Premium for unlimited memories!
+          </p>
+        )}
       </div>
     </div>
   );
 }
-<div className='mt-12'><a href='/street-upload' className='inline-block px-12 py-6 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl font-bold text-2xl hover:scale-105 transition'>Start Street Upload</a></div>
+<div className='mt-12'><a href='/billing' className='inline-block px-12 py-6 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl font-bold text-2xl hover:scale-105 transition'>Upgrade to Premium</a></div>
