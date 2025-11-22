@@ -1,10 +1,1 @@
-export default function Page() {
-  return (
-    <div className='min-h-screen bg-gradient-to-br from-purple-900 to-indigo-900 py-20 px-6 text-white'>
-      <div className='max-w-4xl mx-auto bg-black/50 backdrop-blur-xl rounded-3xl p-16 border border-purple-500'>
-        <h1 className='text-6xl font-black text-center mb-12'>HenMo AI Plugin Developer Agreement</h1>
-        <p className='text-xl leading-relaxed text-center'>Build extensions for HenMo AI • Get approved • Earn revenue share.<br/><br/>Launching 2026<br/><br/>© 2025 HenMo AI</p>
-      </div>
-    </div>
-  )
-}
+export default function Page() { return ( <div className='min-h-screen bg-gradient-to-br from-indigo-900 to-purple-900 py-20 px-6 text-white'><div className='max-w-4xl mx-auto bg-black/50 backdrop-blur-xl rounded-3xl p-16 border border-purple-500'><h1 className='text-6xl font-black text-center mb-12'>HenMo AI Plugin Developer Agreement</h1><p className='text-xl leading-relaxed text-center'>Build extensions for HenMo AI • Get approved • Earn revenue share.<br/><br/>Launching 2026<br/><br/>© 2025 HenMo AI</p></div></div> ) }
