@@ -13,27 +13,18 @@ interface Memory {
 export default function HenMoHub() {
   const [memories, setMemories] = useState<Memory[]>([]);
   const [search, setSearch] = useState("");
-  const [premium, setPremium] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editTitle, setEditTitle] = useState("");
+  const [editContent, setEditContent] = useState("");
   const [user, setUser] = useState<any>(null);
 
-  useEffect(() => {
+  useEffect() => {
     supabase.auth.getUser().then(({ data }) => {
       if (!data.user) window.location.href = "/";
       setUser(data.user);
       loadMemories();
-      checkPremium(data.user.id);
     });
   }, []);
-
-  const checkPremium = async (userId: string) => {
-    const { data } = await supabase
-      .from("subscriptions")
-      .select("status")
-      .eq("user_id", userId)
-      .eq("status", "active");
-
-    setPremium(!!data?.length);
-  };
 
   const loadMemories = async () => {
     const { data } = await supabase
@@ -53,6 +44,31 @@ export default function HenMoHub() {
     setMemories(prev => prev.filter(m => m.id !== id));
   };
 
+  const startEdit = (m: Memory) => {
+    setEditingId(m.id);
+    setEditTitle(m.title);
+    setEditContent(m.content);
+  };
+
+  const saveEdit = async () => {
+    await supabase.from("user_memory").update({
+      title: editTitle,
+      content: editContent
+    }).eq("id", editingId);
+    setEditingId(null);
+    loadMemories();
+  };
+
+  const exportMemories = () => {
+    const data = JSON.stringify(memories, null, 2);
+    const blob = new Blob([data], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "HenMo-Memories.json";
+    a.click();
+  };
+
   return (
     <div className="min-h-screen bg-black text-white p-8">
       <div className="max-w-7xl mx-auto">
@@ -63,9 +79,9 @@ export default function HenMoHub() {
             </h1>
             <p className="text-3xl opacity-80 mt-4">Your Personal Brain • {memories.length} memories</p>
           </div>
-          <p className="text-2xl font-bold {premium ? 'text-green-400' : 'text-red-400'}">
-            {premium ? "Premium Unlocked" : "Free Plan (10 memories max)"}
-          </p>
+          <button onClick={exportMemories} className="bg-purple-600 hover:bg-purple-700 px-8 py-4 rounded-xl font-bold text-xl">
+            Export All
+          </button>
         </div>
 
         <input
@@ -84,33 +100,50 @@ export default function HenMoHub() {
           ) : (
             filtered.map((m) => (
               <div key={m.id} className="bg-gradient-to-br from-purple-900/30 to-pink-900/30 border-2 border-purple-600 rounded-3xl p-8 backdrop-blur-xl hover:scale-105 transition">
-                <h3 className="text-2xl font-bold text-purple-300 mb-4">
-                  {m.title || "Untitled Memory"}
-                </h3>
-                <p className="text-gray-300 mb-6 line-clamp-6">{m.content}</p>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm opacity-70">
-                    {new Date(m.created_at).toLocaleDateString()}
-                  </span>
-                  <button
-                    onClick={() => deleteMemory(m.id)}
-                    className="bg-red-600 hover:bg-red-700 px-6 py-3 rounded-xl font-bold"
-                  >
-                    Delete
-                  </button>
-                </div>
+                {editingId === m.id ? (
+                  <div>
+                    <input
+                      value={editTitle}
+                      onChange={(e) => setEditTitle(e.target.value)}
+                      className="w-full mb-4 px-4 py-2 bg-gray-900 border border-purple-500 rounded-xl text-xl focus:outline-none focus:border-purple-400"
+                      placeholder="Title"
+                    />
+                    <textarea
+                      value={editContent}
+                      onChange={(e) => setEditContent(e.target.value)}
+                      className="w-full h-48 px-4 py-2 bg-gray-900 border border-purple-500 rounded-xl text-xl focus:outline-none focus:border-purple-400"
+                    />
+                    <div className="flex justify-end mt-4">
+                      <button onClick={saveEdit} className="bg-green-600 hover:bg-green-700 px-6 py-3 rounded-xl font-bold mr-4">
+                        Save
+                      </button>
+                      <button onClick={() => setEditingId(null)} className="bg-gray-600 hover:bg-gray-700 px-6 py-3 rounded-xl font-bold">
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <h3 className="text-2xl font-bold text-purple-300 mb-4">
+                      {m.title || "Untitled Memory"}
+                    </h3>
+                    <p className="text-gray-300 mb-6 line-clamp-6">{m.content}</p>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm opacity-70">
+                        {new Date(m.created_at).toLocaleDateString()}
+                      </span>
+                      <div className="space-x-3">
+                        <button onClick={() => startEdit(m)} className="text-blue-400 font-bold">Edit</button>
+                        <button onClick={() => deleteMemory(m.id)} className="text-red-400 font-bold">Delete</button>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             ))
           )}
         </div>
-
-        {!premium && memories.length >= 10 && (
-          <p className="text-center text-2xl text-red-400 mt-12">
-            Upgrade to Premium for unlimited memories!
-          </p>
-        )}
       </div>
     </div>
   );
 }
-<div className='mt-12'><a href='/billing' className='inline-block px-12 py-6 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl font-bold text-2xl hover:scale-105 transition'>Upgrade to Premium</a></div>
