@@ -88,3 +88,4 @@ export default function HenMoHub() {
     </div>
   );
 }
+<div className='mt-12'><a href='/street-upload' className='inline-block px-12 py-6 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl font-bold text-2xl hover:scale-105 transition'>Start Street Upload</a></div>
