@@ -18,7 +18,7 @@ export default function HenMoHub() {
   const [editContent, setEditContent] = useState("");
   const [user, setUser] = useState<any>(null);
 
-  useEffect() => {
+  useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
       if (!data.user) window.location.href = "/";
       setUser(data.user);
