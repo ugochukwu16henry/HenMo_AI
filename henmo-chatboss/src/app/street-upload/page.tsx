@@ -7,10 +7,10 @@ import { v4 as uuid } from "uuid";
 export default function StreetUpload() {
   const [streetName, setStreetName] = useState("");
   const [city, setCity] = useState("");
-  the [country, setCountry] = useState("Nigeria");
+  const [country, setCountry] = useState("Nigeria");
   const [notes, setNotes] = useState("");
-  the [file, setFile] = useState<File | null>(null);
-  the [uploading, setUploading] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
 
   const handleUpload = async () => {
     if (!file) return;
